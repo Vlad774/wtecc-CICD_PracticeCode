@@ -1,4 +1,4 @@
-name: CI Workflow
+name: CI workflow
 
 on:
   push:
@@ -11,11 +11,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    container:
+      image: python:3.9-slim
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.9
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
@@ -24,11 +28,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Verify Python version and installed packages
-        run: |
-          python --version
-          pip list
 
       - name: Lint with Flake8
         run: |
