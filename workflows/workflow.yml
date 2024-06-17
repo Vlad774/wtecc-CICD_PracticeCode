@@ -2,20 +2,20 @@ name: CI workflow
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: python:3.9-slim
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Set up Python
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
@@ -25,20 +25,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Python version
-        run: python --version
-
-      - name: Print installed packages
-        run: pip list
+      - name: Check Python version and installed packages
+        run: |
+          python --version
+          pip list
 
       - name: Lint with Flake8
         run: |
-          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 --count --max-complexity=10 --max-line-length=127 --statistics .
+          python -m flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
+          python -m flake8 --count --max-complexity=10 --max-line-length=127 --statistics .
 
       - name: Run unit tests with Nose
         run: |
-          nosetests -v --with-spec --spec-color --with-coverage --cover-package=app
+          python -m nose -v --with-spec --spec-color --with-coverage --cover-package=app
 
       - name: Print test coverage
         run: |
